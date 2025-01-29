@@ -28,7 +28,8 @@ app.get('/ping', (req, res) => {
 
 // Ruta para devolver el archivo index.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'index.html'));
+    // res.send("index");
+        res.sendFile(path.join(__dirname, '../index.html'));
 });
 
 // Ruta para agregar una nueva temperatura
