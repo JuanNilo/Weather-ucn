@@ -1,6 +1,7 @@
 import Historico from './Main/Cam-Section'
 import Condiciones from './Main/Condiciones'
-import Temperatura from './Main/Temperatura'
+import SideBarConditions from './Main/SideBarConditions'
+'./Main/SideBarConditions'
 
 function Page() {
   // A45248
@@ -10,13 +11,13 @@ function Page() {
 
       {/* Contenedor de informacion */}
       <div className='flex h-[100%] bg-white shadow-md rounded-xl'>
-        <aside className=' w-[25%] bg-[#23415b] rounded-lg text-white p-5 '>
-          <Temperatura />
-        </aside>
         <section className=' block w-[100%]  p-5'>
           <Historico />
           <Condiciones />
         </section>
+        <aside className=' w-[25%] bg-[#23415b] rounded-lg text-white p-5 '>
+          <SideBarConditions />
+        </aside>
       </div>
     </main>
   )
