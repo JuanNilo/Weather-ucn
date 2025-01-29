@@ -4,7 +4,7 @@ const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const app = express();
-const port = 3001;
+const port = 80;
 
 app.use(cors());
 app.use(express.json()); // Middleware para parsear JSON
@@ -18,6 +18,10 @@ app.get('/api/temperature', async (req, res) => {
         console.error(err.message);
         res.status(500).send('Server Error');
     }
+});
+// Ruta para verificar el estado del servidor
+app.get('/', (req, res) => {
+    res.send('pong');
 });
 
 // Ruta para agregar una nueva temperatura
