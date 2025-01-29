@@ -5,7 +5,7 @@ const { PrismaClient } = require('@prisma/client');
 const path = require('path'); // Importar el módulo path
 const prisma = new PrismaClient();
 const app = express();
-const port = 443;
+const port = 80;
 
 app.use(cors());
 app.use(express.json()); // Middleware para parsear JSON
