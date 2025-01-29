@@ -26,12 +26,6 @@ app.get('/ping', (req, res) => {
     res.send('pong');
 });
 
-// Ruta para devolver el archivo index.html
-app.get('/', (req, res) => {
-    // res.send("index");
-        res.sendFile(path.join(__dirname, '../index.html'));
-});
-
 // Ruta para agregar una nueva temperatura
 app.post('/api/temperature', async (req, res) => {
     try {
