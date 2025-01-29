@@ -2,6 +2,7 @@ require('dotenv').config(); // Cargar variables de entorno
 const express = require('express');
 const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
+const path = require('path'); // Importar el módulo path
 const prisma = new PrismaClient();
 const app = express();
 const port = 443;
@@ -19,9 +20,15 @@ app.get('/api/temperature', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
+
 // Ruta para verificar el estado del servidor
-app.get('/', (req, res) => {
+app.get('/ping', (req, res) => {
     res.send('pong');
+});
+
+// Ruta para devolver el archivo index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
 // Ruta para agregar una nueva temperatura
@@ -42,5 +49,5 @@ app.post('/api/temperature', async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on https://localhost:${port}`);
 });
