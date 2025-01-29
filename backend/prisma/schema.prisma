@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model DatosMeteorologicos {
+  id                 Int      @id @default(autoincrement())
+  temperatura        Float // Temperatura en grados Celsius
+  velocidadViento    Float // Velocidad del viento en km/h
+  humedad            Float // Humedad relativa en porcentaje
+  radiacionUV        Float // Radiación UV
+  presionAtmosferica Float? // Presión atmosférica en hPa (opcional)
+  precipitacion      Float? // Precipitación en mm (opcional)
+  fecha              DateTime @default(now()) // Fecha y hora de la medición
+  ubicacion          String? // Ubicación de la estación meteorológica (opcional)
+
+  @@index([fecha]) // Índice sobre la fecha para optimizar consultas por rango de tiempo
+}
