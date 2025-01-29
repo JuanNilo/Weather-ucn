@@ -6,7 +6,7 @@ function Historico() {
     const [bigVideo, setBigVideo] = useState('https://ucncamcq.ucn.cl:8181/62e76aea-0f11-4c9f-ac40-3bb6da9ff5dd.html')
     return (
         <div className=" min-h-[60vh] p-5 rounded-lg">
-            <p className="text-3xl text-[#A45248] font-bold">Condiciones atmosfericas UCN - Coquimbo</p>
+            <p className="text-3xl text-[#A45248] font-bold">Condiciones atmosféricas UCN - Coquimbo</p>
             <main className="flex">
                 <aside className="w-[100%]">
                     <iframe
