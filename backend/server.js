@@ -4,7 +4,7 @@ const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const app = express();
-const port = 80;
+const port = 443;
 
 app.use(cors());
 app.use(express.json()); // Middleware para parsear JSON
