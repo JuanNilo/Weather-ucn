@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 async function handleData() {
     try {
         const today = format(new Date(), 'yyyy-MM-dd'); // Obtener la fecha actual en formato YYYY-MM-DD
+        console.log('Fetching data for:', today);
         const responseTemp = await axios.get(`https://www.ceazamet.cl/ws/pop_ws.php?fn=GetSerieSensor&p_cod=ceazamet&s_cod=UCNGTA&fecha_inicio=${today}&fecha_fin=${today}&user=mlotito@ucn.cl`);
         const responseHumedad = await axios.get(`https://www.ceazamet.cl/ws/pop_ws.php?fn=GetSerieSensor&p_cod=ceazamet&s_cod=UCNGHR&fecha_inicio=${today}&fecha_fin=${today}&user=mlotito@ucn.cl`);
         const responseViento = await axios.get(`https://www.ceazamet.cl/ws/pop_ws.php?fn=GetSerieSensor&p_cod=ceazamet&s_cod=UCNGVV&fecha_inicio=${today}&fecha_fin=${today}&user=mlotito@ucn.cl`);
@@ -22,7 +23,7 @@ async function handleData() {
         const linesPresion = rawDataPresion.split('\n');
 
         const dataTemp = linesTemp
-            .filter((line) => line.startsWith('UCNGTA'))
+            .filter((line) => line.startsWith('UCNGTA') && line.split(',')[2] !== '')
             .map((line) => {
                 const [s_cod, ultima_lectura, min, prom, max, data_pc] = line.split(',');
                 const [fecha, horaCompleta] = ultima_lectura.split(' ');
@@ -32,7 +33,7 @@ async function handleData() {
             });
 
         const dataHumedad = linesHumedad
-            .filter((line) => line.startsWith('UCNGHR'))
+            .filter((line) => line.startsWith('UCNGHR') && line.split(',')[2] !== '')
             .map((line) => {
                 const [s_cod, ultima_lectura, min, prom, max, data_pc] = line.split(',');
                 const [fecha, horaCompleta] = ultima_lectura.split(' ');
@@ -42,7 +43,7 @@ async function handleData() {
             });
 
         const dataViento = linesViento
-            .filter((line) => line.startsWith('UCNGVV'))
+            .filter((line) => line.startsWith('UCNGVV') && line.split(',')[2] !== '')
             .map((line) => {
                 const [s_cod, ultima_lectura, min, prom, max, data_pc] = line.split(',');
                 const [fecha, horaCompleta] = ultima_lectura.split(' ');
@@ -52,7 +53,7 @@ async function handleData() {
             });
 
         const dataPresion = linesPresion
-            .filter((line) => line.startsWith('UCNGPA'))
+            .filter((line) => line.startsWith('UCNGPA') && line.split(',')[2] !== '')
             .map((line) => {
                 const [s_cod, ultima_lectura, min, prom, max, data_pc] = line.split(',');
                 const [fecha, horaCompleta] = ultima_lectura.split(' ');
@@ -67,18 +68,22 @@ async function handleData() {
             const presionItem = dataPresion.find(presionItem => presionItem.fecha === tempItem.fecha && presionItem.hora === tempItem.hora);
             return {
                 ...tempItem,
-                humedad: humedadItem ? humedadItem.humedad : 0,
-                viento: vientoItem ? vientoItem.viento : 0,
-                presion: presionItem ? presionItem.presion : 0
+                humedad: humedadItem ? humedadItem.humedad : NaN,
+                viento: vientoItem ? vientoItem.viento : NaN,
+                presion: presionItem ? presionItem.presion : NaN,
+                temperatura: tempItem.prom // Asegurarse de que el campo temperatura esté presente
             };
         }).reverse();
 
+        // Filtrar datos nulos y NaN antes de subirlos a la base de datos
+        const validData = combinedData.filter(dato => !isNaN(dato.temperatura) && !isNaN(dato.humedad) && !isNaN(dato.viento) && !isNaN(dato.presion));
+
         // Subir los datos combinados a la base de datos
         const result = await prisma.datosMeteorologicos.createMany({
-            data: combinedData.map(dato => ({
+            data: validData.map(dato => ({
                 fecha: new Date(dato.fecha),
                 hora: dato.hora,
-                temperatura: dato.prom,
+                temperatura: dato.temperatura, // Usar el campo temperatura
                 velocidadViento: dato.viento,
                 humedad: dato.humedad,
                 presionAtmosferica: dato.presion,

@@ -4,90 +4,36 @@ import { useState } from "react";
 
 interface DataItem {
     fecha: string;
-    viento: number;
-    hora: string
+    hora: string;
+    temperatura: number;
+    velocidadViento: number;
     humedad: number;
-    prom: number;
-    presion: number;
+    radiacionUV: number;
+    presionAtmosferica: number;
+    salinidad: number;
 }
 
 function ListaDatos() {
     const [data, setData] = useState<DataItem[]>([]);
 
-    async function handleData() {
-        try {
-            const responseTemp = await axios.get('/api/ws/pop_ws.php?fn=GetSerieSensor&p_cod=ceazamet&s_cod=UCNGTA&fecha_inicio=2025-01-29&fecha_fin=2025-01-29&user=mlotito@ucn.cl');
-            const responseHumedad = await axios.get('/api/ws/pop_ws.php?fn=GetSerieSensor&p_cod=ceazamet&s_cod=UCNGHR&fecha_inicio=2025-01-29&fecha_fin=2025-01-29&user=mlotito@ucn.cl');
-            const responseViento = await axios.get('/api/ws/pop_ws.php?fn=GetSerieSensor&p_cod=ceazamet&s_cod=UCNGVV&fecha_inicio=2025-01-29&fecha_fin=2025-01-29&user=mlotito@ucn.cl');
-            const responsePresion = await axios.get('/api/ws/pop_ws.php?fn=GetSerieSensor&p_cod=ceazamet&s_cod=UCNGPA&fecha_inicio=2025-01-29&fecha_fin=2025-01-29&user=mlotito@ucn.cl');
-
-            const rawDataTemp = responseTemp.data;
-            const rawDataHumedad = responseHumedad.data;
-            const rawDataViento = responseViento.data;
-            const rawDataPresion = responsePresion.data;
-
-            const linesTemp = rawDataTemp.split('\n');
-            const linesHumedad = rawDataHumedad.split('\n');
-            const linesViento = rawDataViento.split('\n');
-            const linesPresion = rawDataPresion.split('\n');
-
-            const dataTemp = linesTemp
-                .filter((line: string) => line.startsWith('UCNGTA'))
-                .map((line: string) => {
-                    const [s_cod, ultima_lectura, min, prom, max, data_pc] = line.split(',');
-                    const [fecha, horaCompleta] = ultima_lectura.split(' ');
-                    const [hora, minutos] = horaCompleta.split(':');
-                    const horaFormateada = `${hora}:${minutos}`;
-                    return { fecha, hora: horaFormateada, prom: parseFloat(prom) };
-                });
-
-            const dataHumedad = linesHumedad
-                .filter((line: string) => line.startsWith('UCNGHR'))
-                .map((line: string) => {
-                    const [s_cod, ultima_lectura, min, prom, max, data_pc] = line.split(',');
-                    const [fecha, horaCompleta] = ultima_lectura.split(' ');
-                    const [hora, minutos] = horaCompleta.split(':');
-                    const horaFormateada = `${hora}:${minutos}`;
-                    return { fecha, hora: horaFormateada, humedad: parseFloat(prom) };
-                });
-
-            const dataViento = linesViento
-                .filter((line: string) => line.startsWith('UCNGVV'))
-                .map((line: string) => {
-                    const [s_cod, ultima_lectura, min, prom, max, data_pc] = line.split(',');
-                    const [fecha, horaCompleta] = ultima_lectura.split(' ');
-                    const [hora, minutos] = horaCompleta.split(':');
-                    const horaFormateada = `${hora}:${minutos}`;
-                    return { fecha, hora: horaFormateada, viento: parseFloat(prom) };
-                });
-
-            const dataPresion = linesPresion
-                .filter((line: string) => line.startsWith('UCNGPA'))
-                .map((line: string) => {
-                    const [s_cod, ultima_lectura, min, prom, max, data_pc] = line.split(',');
-                    const [fecha, horaCompleta] = ultima_lectura.split(' ');
-                    const [hora, minutos] = horaCompleta.split(':');
-                    const horaFormateada = `${hora}:${minutos}`;
-                    return { fecha, hora: horaFormateada, presion: parseFloat(prom) };
-                });
-
-            const combinedData = dataTemp.map(tempItem => {
-                const humedadItem = dataHumedad.find(humItem => humItem.fecha === tempItem.fecha && humItem.hora === tempItem.hora);
-                const vientoItem = dataViento.find(vientoItem => vientoItem.fecha === tempItem.fecha && vientoItem.hora === tempItem.hora);
-                const presionItem = dataPresion.find(presionItem => presionItem.fecha === tempItem.fecha && presionItem.hora === tempItem.hora);
-                return {
-                    ...tempItem,
-                    humedad: humedadItem ? humedadItem.humedad : 0,
-                    viento: vientoItem ? vientoItem.viento : 0,
-                    presion: presionItem ? presionItem.presion : 0
-                };
-            }).reverse();
-
-            setData(combinedData);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+    const handleData = async () => {
+        const response = await axios.get("http://localhost:80/api/data/");
+        const formattedData = response.data.map((item: DataItem) => {
+            const date = new Date(item.fecha);
+            const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+            return {
+                ...item,
+                fecha: formattedDate
+            };
+        }).sort((a: DataItem, b: DataItem) => {
+            const dateA = new Date(`${a.fecha.split('-').reverse().join('-')}T${a.hora}`);
+            const dateB = new Date(`${b.fecha.split('-').reverse().join('-')}T${b.hora}`);
+            return dateB.getTime() - dateA.getTime();
+        });
+        setData(formattedData);
+        console.log("data", formattedData);
     }
+
     useEffect(() => {
         handleData();
     }
@@ -130,11 +76,11 @@ function ListaDatos() {
                         <tr className="bg-white border-b text-center dark:bg-gray-800 dark:border-gray-700 border-gray-200" key={index}>
                             <td className="px-6 py-3">{item.fecha}</td>
                             <td className="px-6 py-3">{item.hora}</td>
-                            <td className="px-6 py-3">{item.viento.toFixed(1)} m/s</td>
-                            <td className="px-6 py-3">{item.prom.toFixed(1)} °C</td>
+                            <td className="px-6 py-3">{item.velocidadViento.toFixed(1)} m/s</td>
+                            <td className="px-6 py-3">{item.temperatura.toFixed(1)} °C</td>
                             <td className="px-6 py-3">-</td>
                             <td className="px-6 py-3">{item.humedad.toFixed(1)}%</td>
-                            <td className="px-6 py-3 text-center">{item.presion.toFixed(1)}</td>
+                            <td className="px-6 py-3 text-center">{item.presionAtmosferica.toFixed(1)}</td>
                         </tr>
                     ))}
                 </tbody>
