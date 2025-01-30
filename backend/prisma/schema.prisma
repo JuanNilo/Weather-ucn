@@ -22,8 +22,7 @@ model DatosMeteorologicos {
   humedad            Float // Humedad relativa en porcentaje
   radiacionUV        Float // Radiación UV
   presionAtmosferica Float // Presión atmosférica en hPa 
-  salinidad          Float // Salinidad en...
+  salinidad          Float
 
-  @@unique([fecha, hora]) // Índice único para evitar duplicados
-  @@index([fecha]) // Índice sobre la fecha para optimizar consultas por rango de tiempo
+  @@unique([fecha, hora]) // Restricción de unicidad en los campos fecha y hora
 }

@@ -7,7 +7,9 @@
     "dev": "vite --host",
     "start": "concurrently \"npm run server\" \"npm run dev\"",
     "server": "cd backend && node server.js",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && concurrently \"npm run build:backend\" \"npm run build:frontend\"",
+    "build:backend": "cd backend && tsc",
+    "build:frontend": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

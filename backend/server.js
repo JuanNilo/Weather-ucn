@@ -1,13 +1,14 @@
-require('dotenv').config(); // Cargar variables de entorno
+const path = require('path'); // Importar el módulo path
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); // Cargar variables de entorno desde el archivo .env en la raíz del proyecto
 const express = require('express');
 const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
-const path = require('path'); // Importar el módulo path
 const { handleData } = require('./dataHandler'); // Importar la función handleData
 const cron = require('node-cron'); // Importar node-cron
 const prisma = new PrismaClient();
 const app = express();
 const port = 80;
+
 
 app.use(cors());
 app.use(express.json());

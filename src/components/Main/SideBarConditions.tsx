@@ -20,6 +20,7 @@ function SideBarConditions() {
 
     useEffect(() => {
         scaleBackground(uvRadaition);
+        setUvRadaition(12);
     }, [uvRadaition]);
 
     return (
