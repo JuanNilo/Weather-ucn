@@ -15,6 +15,9 @@ interface DataItem {
 function ListaDatos() {
     const [data, setData] = useState<DataItem[]>([]);
 
+    const [startDate, setStartDate] = useState<string>("");
+    const [endDate, setEndDate] = useState<string>("");
+
     const handleData = async () => {
         const today = new Date();
         today.setUTCHours(0, 0, 0, 0); // Ajustar la hora a 00:00:00.000Z
@@ -63,15 +66,52 @@ function ListaDatos() {
         document.body.removeChild(link);
     }
 
+    const handleRangeData = async () => {
+        const formattedStartDate = new Date(startDate);
+        formattedStartDate.setUTCHours(0, 0, 0, 0);
+        const formattedStartDateISOString = formattedStartDate.toISOString();
+        console.log('startDate', formattedStartDateISOString);
+
+        const formattedEndDate = new Date(endDate);
+        formattedEndDate.setUTCHours(0, 0, 0, 0);
+        const formattedEndDateISOString = formattedEndDate.toISOString();
+        console.log('endDate', formattedEndDateISOString);
+
+
+        const response = await axios.get(`http://localhost:80/api/data/${formattedStartDateISOString}/${formattedEndDateISOString}`);
+        const formattedData = response.data.map((item: DataItem) => {
+            const date = new Date(item.fecha);
+            const formattedDate = `${date.getUTCDate().toString().padStart(2, '0')}-${(date.getUTCMonth() + 1).toString().padStart(2, '0')}-${date.getUTCFullYear()}`;
+            return {
+                ...item,
+                fecha: formattedDate
+            };
+        }).sort((a: DataItem, b: DataItem) => {
+            const dateA = new Date(`${a.fecha.split('-').reverse().join('-')}T${a.hora}`);
+            const dateB = new Date(`${b.fecha.split('-').reverse().join('-')}T${b.hora}`);
+            return dateB.getTime() - dateA.getTime();
+        });
+        setData(formattedData);
+        console.log("data", formattedData);
+    }
+
     useEffect(() => {
         handleData();
     }, []);
 
     return (
         <div className="relative overflow-x-auto">
-            <button onClick={downloadCSV} className="mb-4 px-4 py-2 bg-blue-500 text-white rounded">Descargar CSV</button>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-800 dark:text-gray-400 border-[1px] border-gray-300 shadow-lg">
-                <thead className="text-xs text-gray-700 uppercase bg-slate-100 border-[1px] border-gray-300 dark:bg-gray-700 dark:text-gray-400">
+            <h2 className="text-3xl font-semibold mb-4">Datos Meteorológicos</h2>
+            <div className="mb-4 flex items-center justify-between">
+                <button onClick={downloadCSV} className=" px-4 py-2 bg-[#23415b] font-semibold text-white rounded">Descargar CSV</button>
+                <label className="mr-2">Desde:</label>
+                <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="bg-slate-100 border-[1px] border-gray-300 p-2 rounded-md" />
+                <label className="mr-2">Hasta:</label>
+                <input type="date" className="bg-slate-100 border-[1px] border-gray-300 p-2 rounded-md" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                <button onClick={handleRangeData} className="ml-4 px-4 py-2 font-semibold bg-[#23415b] text-white rounded">Buscar</button>
+            </div>
+            <table className="w-full text-sm text-left rtl:text-right text-gray-800  border-[1px] border-gray-300 shadow-lg">
+                <thead className="text-xs text-gray-700 uppercase bg-slate-100 border-[1px] border-gray-300 ">
                     <tr>
                         <th scope="col" className="px-6 py-3 font-medium">Fecha</th>
                         <th scope="col" className="px-6 py-3 font-medium">Hora</th>
