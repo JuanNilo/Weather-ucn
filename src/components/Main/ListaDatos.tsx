@@ -153,17 +153,17 @@ function ListaDatos() {
                 }
 
             </div>
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 grid grid-cols-1 md:flex gap-y-2  items-center justify-between">
                 <button onClick={downloadCSV} className=" px-4 py-2 bg-[#23415b] font-semibold text-white rounded">Descargar CSV</button>
                 <label className="mr-2">Desde:</label>
                 <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="bg-slate-100 border-[1px] border-gray-300 p-2 rounded-md" />
                 <label className="mr-2">Hasta:</label>
                 <input type="date" className="bg-slate-100 border-[1px] border-gray-300 p-2 rounded-md" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                <button onClick={handleRangeData} className="ml-4 w-32 px-4 py-2 font-semibold bg-[#23415b] text-white rounded">
+                <button onClick={handleRangeData} className="md:ml-4 md:w-32 px-4 py-2 font-semibold bg-[#23415b] text-white rounded">
                     {loading ? "Cargando..." : "Buscar"}
                 </button>
             </div>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-800  border-[1px] border-gray-300 shadow-lg">
+            <table className="max-w-[40%] md:w-full text-sm text-left rtl:text-right text-gray-800 overflow-x-scroll  border-[1px] border-gray-300 shadow-lg">
                 <thead className="text-xs text-gray-700 uppercase bg-slate-100 border-[1px] border-gray-300 ">
                     <tr>
                         <th scope="col" className="px-6 py-3 font-medium">Fecha</th>

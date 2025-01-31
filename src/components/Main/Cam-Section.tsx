@@ -17,7 +17,7 @@ function Historico() {
         <div className=" min-h-[60vh] p-5 rounded-lg mb-5">
             <p className="text-3xl text-[#A45248] font-bold">Condiciones atmosféricas UCN - Coquimbo</p>
             <main className="flex">
-                <aside className="w-[100%] max-h-[55vh]">
+                <aside className="hidden md:block w-[100%] max-h-[55vh]">
                     <iframe
                         src={`${bigVideo}`}
                         frameBorder={0}
@@ -26,7 +26,7 @@ function Historico() {
                         className=" h-[60vh] w-full pointer-events-none"
                     ></iframe>
                 </aside>
-                <div className="w-[40%] mx-2 flex flex-col items-center gap-2 p overflow-scrol  overflow-x-hidden max-h-[55vh]">
+                <div className="w-[100%] md:w-[40%] mx-2 flex flex-col items-center gap-2 p overflow-scrol  overflow-x-hidden max-h-[55vh]">
                     {
                         videos.map((video, index) => (
                             <div key={index} className=" w-96 flex items-start justify-center" onClick={() => setBigVideo(video)} >
