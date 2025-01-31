@@ -17,7 +17,7 @@ function Historico() {
         <div className=" min-h-[60vh] p-5 rounded-lg">
             <p className="text-3xl text-[#A45248] font-bold">Condiciones atmosféricas UCN - Coquimbo</p>
             <main className="flex">
-                <aside className="w-[100%]">
+                <aside className="w-[100%] max-h-[55vh]">
                     <iframe
                         src={`${bigVideo}`}
                         frameBorder={0}
