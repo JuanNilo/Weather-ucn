@@ -137,7 +137,7 @@ function ListaDatos() {
     const paginate = (pageNumber: number) => { setCurrentPage(pageNumber); }
 
     return (
-        <div className="relative overflow-x-auto">
+        <div className="relative w-[100%]">
             <div className="flex justify-between mb-2">
                 <h2 className="text-3xl font-semibold mb-4">Datos Meteorológicos</h2>
                 {
@@ -162,40 +162,44 @@ function ListaDatos() {
                     {loading ? "Cargando..." : "Buscar"}
                 </button>
             </div>
-            <table className="max-w-[40%] md:w-full text-sm text-left rtl:text-right text-gray-800 overflow-x-scroll  border-[1px] border-gray-300 shadow-lg">
-                <thead className="text-xs text-gray-700 uppercase bg-slate-100 border-[1px] border-gray-300 ">
-                    <tr>
-                        <th scope="col" className="px-6 py-3 font-medium">Fecha</th>
-                        <th scope="col" className="px-6 py-3 font-medium">Hora</th>
-                        <th scope="col" className="px-6 py-3 font-medium">Temperatura</th>
-                        <th scope="col" className="px-6 py-3 font-medium">Velocidad Viento</th>
-                        <th scope="col" className="px-6 py-3 font-medium">Humedad</th>
-                        <th scope="col" className="px-6 py-3 font-medium">Radiación UV</th>
-                        <th scope="col" className="px-6 py-3 font-medium">Presión Atmosférica</th>
-                        <th scope="col" className="px-6 py-3 font-medium">Salinidad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.length === 0 && (
+            <div className=" overflow-scroll">
+
+                <table className=" md:w-full text-sm text-left rtl:text-right text-gray-800 overflow-x-scroll  border-[1px] border-gray-300 shadow-lg">
+                    <thead className="text-xs text-gray-700 uppercase bg-slate-100 border-[1px] border-gray-300 ">
                         <tr>
-                            <td colSpan={8} className="text-center py-3">No hay datos disponibles, intente con otra fecha.
-                            </td>
+                            <th scope="col" className="px-6 py-3 font-medium">Fecha</th>
+                            <th scope="col" className="px-6 py-3 font-medium">Hora</th>
+                            <th scope="col" className="px-6 py-3 font-medium">Temperatura</th>
+                            <th scope="col" className="px-6 py-3 font-medium">Velocidad Viento</th>
+                            <th scope="col" className="px-6 py-3 font-medium">Humedad</th>
+                            <th scope="col" className="px-6 py-3 font-medium">Radiación UV</th>
+                            <th scope="col" className="px-6 py-3 font-medium">Presión Atmosférica</th>
+                            <th scope="col" className="px-6 py-3 font-medium">Salinidad</th>
                         </tr>
-                    )}
-                    {currentRows.map((item, index) => (
-                        <tr key={index}>
-                            <td className="px-6 py-3">{item.fecha}</td>
-                            <td className="px-6 py-3">{item.hora}</td>
-                            <td className="px-6 py-3">{item.temperatura.toFixed(1)}</td>
-                            <td className="px-6 py-3">{item.velocidadViento.toFixed(1)}</td>
-                            <td className="px-6 py-3">{item.humedad.toFixed(1)}</td>
-                            <td className="px-6 py-3">{item.radiacionUV.toFixed(1)}</td>
-                            <td className="px-6 py-3">{item.presionAtmosferica.toFixed(1)}</td>
-                            <td className="px-6 py-3">{item.salinidad.toFixed(1)}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {data.length === 0 && (
+                            <tr>
+                                <td colSpan={8} className="text-center py-3">No hay datos disponibles, intente con otra fecha.
+                                </td>
+                            </tr>
+                        )}
+                        {currentRows.map((item, index) => (
+                            <tr key={index}>
+                                <td className="px-6 py-3">{item.fecha}</td>
+                                <td className="px-6 py-3">{item.hora}</td>
+                                <td className="px-6 py-3">{item.temperatura.toFixed(1)}</td>
+                                <td className="px-6 py-3">{item.velocidadViento.toFixed(1)}</td>
+                                <td className="px-6 py-3">{item.humedad.toFixed(1)}</td>
+                                <td className="px-6 py-3">{item.radiacionUV.toFixed(1)}</td>
+                                <td className="px-6 py-3">{item.presionAtmosferica.toFixed(1)}</td>
+                                <td className="px-6 py-3">{item.salinidad.toFixed(1)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+            </div>
             <div className="flex justify-center mt-4">
                 {Array.from({ length: Math.ceil(data.length / rowsPerPage) }, (_, i) => (
                     <button
