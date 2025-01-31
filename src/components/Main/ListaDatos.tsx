@@ -23,7 +23,7 @@ function ListaDatos() {
         today.setUTCHours(0, 0, 0, 0); // Ajustar la hora a 00:00:00.000Z
         const todayISOString = today.toISOString(); // Obtener la fecha de hoy en formato YYYY-MM-DDTHH:mm:ss.sssZ
         console.log("today", todayISOString);
-        const response = await axios.get(`http://localhost:80/api/data/${todayISOString}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/data/${todayISOString}`);
         const formattedData = response.data.map((item: DataItem) => {
             const date = new Date(item.fecha);
             const formattedDate = `${date.getUTCDate().toString().padStart(2, '0')}-${(date.getUTCMonth() + 1).toString().padStart(2, '0')}-${date.getUTCFullYear()}`;
@@ -78,7 +78,7 @@ function ListaDatos() {
         console.log('endDate', formattedEndDateISOString);
 
 
-        const response = await axios.get(`http://localhost:80/api/data/${formattedStartDateISOString}/${formattedEndDateISOString}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/data/${formattedStartDateISOString}/${formattedEndDateISOString}`);
         const formattedData = response.data.map((item: DataItem) => {
             const date = new Date(item.fecha);
             const formattedDate = `${date.getUTCDate().toString().padStart(2, '0')}-${(date.getUTCMonth() + 1).toString().padStart(2, '0')}-${date.getUTCFullYear()}`;
