@@ -26,10 +26,10 @@ function Historico() {
                         className=" h-[60vh] w-full pointer-events-none"
                     ></iframe>
                 </aside>
-                <div className="w-[40%] m-4 flex flex-col items-center gap-2 py-5 overflow-scroll max-h-[55vh]">
+                <div className="w-[40%] mx-2 flex flex-col items-center gap-2 p overflow-scrol  overflow-x-hidden max-h-[55vh]">
                     {
                         videos.map((video, index) => (
-                            <div key={index} className="w-full flex items-center justify-center" onClick={() => setBigVideo(video)} >
+                            <div key={index} className=" w-96 flex items-start justify-center" onClick={() => setBigVideo(video)} >
                                 <CardVideo link={video} />
                             </div>
                         ))
