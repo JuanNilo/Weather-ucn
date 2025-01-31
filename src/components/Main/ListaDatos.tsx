@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FaTimesCircle } from "react-icons/fa";
+import { set } from "date-fns";
 
 interface DataItem {
     fecha: string;
@@ -18,6 +20,18 @@ function ListaDatos() {
     const [startDate, setStartDate] = useState<string>("");
     const [endDate, setEndDate] = useState<string>("");
 
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const rowsPerPage = 24;
+
+    // Mensaje de error
+    const [error, setError] = useState<string>("");
+    const [showError, setShowError] = useState<boolean>(false);
+
+    // Mensaje de cargando
+    const [loading, setLoading] = useState<boolean>(false);
+
+
+    // Función para obtener los datos de la API
     const handleData = async () => {
         const today = new Date();
         today.setUTCHours(0, 0, 0, 0); // Ajustar la hora a 00:00:00.000Z
@@ -67,6 +81,19 @@ function ListaDatos() {
     }
 
     const handleRangeData = async () => {
+        setShowError(false);
+        setError("");
+        if (startDate === "" || endDate === "") {
+            setError("Debe seleccionar una fecha de inicio y una fecha de término.");
+            setShowError(true);
+            return;
+        }
+        if (startDate > endDate) {
+            setError("La fecha de inicio no puede ser mayor a la fecha de término.");
+            setShowError(true);
+            return;
+        }
+        setLoading(true);
         const formattedStartDate = new Date(startDate);
         formattedStartDate.setUTCHours(0, 0, 0, 0);
         const formattedStartDateISOString = formattedStartDate.toISOString();
@@ -92,6 +119,11 @@ function ListaDatos() {
             return dateB.getTime() - dateA.getTime();
         });
         setData(formattedData);
+        // tiempo de espera 5 segundos
+        setTimeout(() => {
+            setLoading(false);
+        }, 5000);
+        setLoading(false);
         console.log("data", formattedData);
     }
 
@@ -99,16 +131,37 @@ function ListaDatos() {
         handleData();
     }, []);
 
+    const indexOfLastRow = currentPage * rowsPerPage;
+    const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+    const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
+
+    const paginate = (pageNumber: number) => { setCurrentPage(pageNumber); }
+
     return (
         <div className="relative overflow-x-auto">
-            <h2 className="text-3xl font-semibold mb-4">Datos Meteorológicos</h2>
+            <div className="flex justify-between mb-2">
+                <h2 className="text-3xl font-semibold mb-4">Datos Meteorológicos</h2>
+                {
+                    showError && (
+                        <div className=" w-[50%] h-10 rounded-md border-[1px] border-red-600 bg-red-100 flex justify-between items-center p-4">
+                            <p>{error}</p>
+                            <button onClick={() => setShowError(false)}>
+                                <FaTimesCircle className="text-red-700" size={22} />
+                            </button>
+                        </div>
+                    )
+                }
+
+            </div>
             <div className="mb-4 flex items-center justify-between">
                 <button onClick={downloadCSV} className=" px-4 py-2 bg-[#23415b] font-semibold text-white rounded">Descargar CSV</button>
                 <label className="mr-2">Desde:</label>
                 <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="bg-slate-100 border-[1px] border-gray-300 p-2 rounded-md" />
                 <label className="mr-2">Hasta:</label>
                 <input type="date" className="bg-slate-100 border-[1px] border-gray-300 p-2 rounded-md" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                <button onClick={handleRangeData} className="ml-4 px-4 py-2 font-semibold bg-[#23415b] text-white rounded">Buscar</button>
+                <button onClick={handleRangeData} className="ml-4 w-32 px-4 py-2 font-semibold bg-[#23415b] text-white rounded">
+                    {loading ? "Cargando..." : "Buscar"}
+                </button>
             </div>
             <table className="w-full text-sm text-left rtl:text-right text-gray-800  border-[1px] border-gray-300 shadow-lg">
                 <thead className="text-xs text-gray-700 uppercase bg-slate-100 border-[1px] border-gray-300 ">
@@ -124,7 +177,13 @@ function ListaDatos() {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((item, index) => (
+                    {data.length === 0 && (
+                        <tr>
+                            <td colSpan={8} className="text-center py-3">No hay datos disponibles, intente con otra fecha.
+                            </td>
+                        </tr>
+                    )}
+                    {currentRows.map((item, index) => (
                         <tr key={index}>
                             <td className="px-6 py-3">{item.fecha}</td>
                             <td className="px-6 py-3">{item.hora}</td>
@@ -138,6 +197,17 @@ function ListaDatos() {
                     ))}
                 </tbody>
             </table>
+            <div className="flex justify-center mt-4">
+                {Array.from({ length: Math.ceil(data.length / rowsPerPage) }, (_, i) => (
+                    <button
+                        key={i + 1}
+                        onClick={() => paginate(i + 1)}
+                        className={`px-4 py-2 mx-1 rounded ${currentPage === i + 1 ? 'bg-[#23415b] text-white' : 'bg-gray-200 text-gray-700'}`}
+                    >
+                        {i + 1}
+                    </button>
+                ))}
+            </div>
         </div>
     );
 }
