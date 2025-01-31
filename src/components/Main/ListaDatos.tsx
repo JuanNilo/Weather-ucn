@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaTimesCircle } from "react-icons/fa";
-import { set } from "date-fns";
 
 interface DataItem {
     fecha: string;
