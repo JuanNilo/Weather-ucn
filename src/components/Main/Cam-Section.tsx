@@ -14,7 +14,7 @@ function Historico() {
     const [bigVideo, setBigVideo] = useState(videos[0])
 
     return (
-        <div className=" min-h-[60vh] p-5 rounded-lg">
+        <div className=" min-h-[60vh] p-5 rounded-lg mb-5">
             <p className="text-3xl text-[#A45248] font-bold">Condiciones atmosféricas UCN - Coquimbo</p>
             <main className="flex">
                 <aside className="w-[100%] max-h-[55vh]">
