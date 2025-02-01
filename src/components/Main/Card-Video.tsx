@@ -4,8 +4,8 @@ interface CardVideoProps {
 function CardVideo({ link }: CardVideoProps) {
 
     return (
-        <div className="bg-slate-100 w-[80%] shadow-md border-[1px] border-gray-300 text-black rounded-lg overflow-hidden">
-            <div className="w-full h-0 pb-[56.25%] relative overflow-hidden hover:cursor-pointer ">
+        <div className="bg-slate-100 w-[90%] shadow-md border-[1px] border-gray-300 text-black rounded-lg overflow-hidden">
+            <div className="w-full  pb-[59.25%] relative overflow-hidden hover:cursor-pointer ">
                 <iframe
                     src={`${link}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&showinfo=0`}
                     frameBorder="0"
