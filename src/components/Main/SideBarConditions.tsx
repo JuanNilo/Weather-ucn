@@ -47,7 +47,7 @@ function SideBarConditions() {
                     src="https://ucncamcq.ucn.cl:8181/f537af01-e143-49b9-901a-6e6b67be9073.html"
                     frameBorder={0}
                     allowFullScreen
-                    className="w-[100%] pointer-events-none"
+                    className="w-full h-[30vh] pointer-events-none"
                 ></iframe>
             </div>
         </>

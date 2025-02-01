@@ -5,12 +5,10 @@ import SideBarConditions from './Main/SideBarConditions'
 import TopBar from './Main/TopBar'
 
 function Page() {
-  // A45248
 
   return (
     <main className=' bg-[#f1f1f1] h-[100%] md:p-5'>
 
-      {/* Contenedor de informacion */}
       <div className=' block md:flex h-[100%] bg-white shadow-md md:rounded-xl'>
         <section className=' block w-[100%]  md:p-5'>
           <TopBar />

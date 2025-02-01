@@ -3,10 +3,14 @@ const { PrismaClient } = require('@prisma/client');
 const { format } = require('date-fns'); // Importar la función format de date-fns
 const prisma = new PrismaClient();
 
+
+// Función para obtener los datos de la API y guardarlos en la base de datos
 async function handleData() {
     try {
-        const today = format(new Date(), 'yyyy-MM-dd'); // Obtener la fecha actual en formato YYYY-MM-DD
-        console.log('Fetching data for:', today);
+        // Obtener la fecha actual en foramto: YYYY-MM-DDTHH:MM:SS.MSZ
+        const today = format(new Date(), 'yyyy-MM-dd'); 
+
+        // Obtener los datos de la API de los sensores de la estación meteorológica
         const responseTemp = await axios.get(`https://www.ceazamet.cl/ws/pop_ws.php?fn=GetSerieSensor&p_cod=ceazamet&s_cod=UCNGTA&fecha_inicio=${today}&fecha_fin=${today}&user=mlotito@ucn.cl`);
         const responseHumedad = await axios.get(`https://www.ceazamet.cl/ws/pop_ws.php?fn=GetSerieSensor&p_cod=ceazamet&s_cod=UCNGHR&fecha_inicio=${today}&fecha_fin=${today}&user=mlotito@ucn.cl`);
         const responseViento = await axios.get(`https://www.ceazamet.cl/ws/pop_ws.php?fn=GetSerieSensor&p_cod=ceazamet&s_cod=UCNGVV&fecha_inicio=${today}&fecha_fin=${today}&user=mlotito@ucn.cl`);
@@ -22,6 +26,9 @@ async function handleData() {
         const linesViento = rawDataViento.split('\n');
         const linesPresion = rawDataPresion.split('\n');
 
+        // Filtra los datos para obtener la informacion de la temperatura, humedad, viento y presion
+        // y los guarda en un arreglo de objetos
+        // Ignora las lecturas que no tienen datos para evitar errores
         const dataTemp = linesTemp
             .filter((line) => line.startsWith('UCNGTA') && line.split(',')[2] !== '')
             .map((line) => {
@@ -62,6 +69,9 @@ async function handleData() {
                 return { fecha, hora: horaFormateada, presion: parseFloat(prom) };
             });
 
+        // Combinar los datos de temperatura, humedad, viento y presion en un solo arreglo
+        // Asegurarse de que los datos estén ordenados de manera ascendente 
+        // Para que coincidan con el orden de la base de datos
         const combinedData = dataTemp.map(tempItem => {
             const humedadItem = dataHumedad.find(humItem => humItem.fecha === tempItem.fecha && humItem.hora === tempItem.hora);
             const vientoItem = dataViento.find(vientoItem => vientoItem.fecha === tempItem.fecha && vientoItem.hora === tempItem.hora);
@@ -79,6 +89,9 @@ async function handleData() {
         const validData = combinedData.filter(dato => !isNaN(dato.temperatura) && !isNaN(dato.humedad) && !isNaN(dato.viento) && !isNaN(dato.presion));
 
         // Subir los datos combinados a la base de datos
+        // Usar el campo temperatura en lugar de promedio
+        // Asignar un valor por defecto si no está disponible
+        // Omitir duplicados
         const result = await prisma.datosMeteorologicos.createMany({
             data: validData.map(dato => ({
                 fecha: new Date(dato.fecha),

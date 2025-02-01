@@ -1,15 +1,20 @@
-const path = require('path'); // Importar el módulo path
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); // Cargar variables de entorno desde el archivo .env en la raíz del proyecto
+const path = require('path'); 
+// Carga las variables de entorno desde el archivo .env en la raíz del proyecto
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); 
 const express = require('express');
 const cors = require('cors');
-const { PrismaClient } = require('@prisma/client');
-const { handleData } = require('./dataHandler'); // Importar la función handleData
 const cron = require('node-cron'); // Importar node-cron
+
+const { handleData } = require('./dataHandler'); // Importar la función handleData
+
+// Importar PrismaClient, la instancia de PrismaClient y el modelo de datos
+const { PrismaClient } = require('@prisma/client'); 
 const prisma = new PrismaClient();
+
 const app = express();
 const port = 80;
 
-
+// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -30,6 +35,8 @@ app.get('/api/data', async (req, res) => {
 });
 
 // Ruta que retorna los datos almacenados en la base de datos para una fecha específica
+// URL de ejemplo: http://localhost:3000/api/data/2025-01-29T00:00:00.000Z
+// Formato de fecha: YYYY-MM-DDTHH:MM:SS.MSZ 
 app.get('/api/data/:fecha', async (req, res) => {
     try {
         const { fecha } = req.params;
@@ -46,6 +53,8 @@ app.get('/api/data/:fecha', async (req, res) => {
 });
 
 // Ruta que retorna los datos almacenados en la base de datos para un intervalo de fechas
+// URL de ejemplo: http://localhost:3000/api/data/2025-01-29T00:00:00.000Z/2025-01-30T00:00:00.000Z
+// Formato de fecha: YYYY-MM-DDTHH:MM:SS.MSZ
 app.get('/api/data/:fechaInicio/:fechaFin', async (req, res) => {
     try {
         const { fechaInicio, fechaFin } = req.params;
@@ -64,7 +73,7 @@ app.get('/api/data/:fechaInicio/:fechaFin', async (req, res) => {
     }
 });
 
-// Ruta que llama a la funcion handleData para actualizar los datos
+// Ruta que actualiza los datos almacenados en la base de datos de manera manual para la fecha de hoy
 app.get('/api/update', async (req, res) => {
     try {
         await handleData();
@@ -75,7 +84,8 @@ app.get('/api/update', async (req, res) => {
     }
 });
 
-// Configurar un trabajo cron para ejecutar handleData una vez por hora
+// Recargar los datos cada hora segun lo acordado con Ceaza
+// La tarea se ejecuta a los 40 minutos de cada hora
 cron.schedule('40 * * * *', async () => {
     try {
         console.log('Ejecutando handleData...');
