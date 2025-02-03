@@ -139,7 +139,7 @@ function ListaDatos() {
     return (
         <div className="relative w-[100%]">
             <div className="flex justify-between mb-2">
-                <h2 className="text-3xl font-semibold mb-4">Datos Meteorológicos</h2>
+                <h1 className="text-3xl text-[#A45248] font-bold">Condiciones atmosféricas UCN - Coquimbo</h1>
                 {
                     showError && (
                         <div className=" w-[50%] h-10 rounded-md border-[1px] border-red-600 bg-red-100 flex justify-between items-center p-4">

@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 // Función para obtener los datos de la API y guardarlos en la base de datos
 async function handleData() {
     try {
-        // Obtener la fecha actual en foramto: YYYY-MM-DDTHH:MM:SS.MSZ
+        // Obtener la fecha actual en foramto: YYYY-MM-DD
         const today = format(new Date(), 'yyyy-MM-dd'); 
 
         // Obtener los datos de la API de los sensores de la estación meteorológica

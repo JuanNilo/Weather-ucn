@@ -43,12 +43,10 @@ function SideBarConditions() {
             </div>
             <div>
                 <p className="text-white text-2xl font-semibold">Camara Submarina</p>
-                <iframe
-                    src="https://ucncamcq.ucn.cl:8181/f537af01-e143-49b9-901a-6e6b67be9073.html"
-                    frameBorder={0}
-                    allowFullScreen
-                    className="w-full h-[30vh] pointer-events-none"
-                ></iframe>
+                <div className="w-full h-40 bg-gray-800 rounded-lg border-2 border-white flex justify-center items-center relative overflow-hidden">
+                    <img src="public/fondo-marino.png" alt="Proximamente" className="w-full  blur-sm hidden md:block absolute inset-0" />
+                    <p className="text-white font-bold text-3xl    relative z-10">Proximamente</p>
+                </div>
             </div>
         </>
     )
