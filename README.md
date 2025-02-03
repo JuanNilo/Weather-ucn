@@ -1,50 +1,62 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Departamento Informática UCN
 
-Currently, two official plugins are available:
+Esta aplicación permite visualizar datos meteorológicos en tiempo real, obtenidos de una API externa, y mostrarlos en una tabla con opciones de paginación y descarga en formato CSV. Además, incluye la funcionalidad de mostrar camaras del campus Guayacán de la Universidad Católica del Norte.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+## Instalación y Ejecución
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Ejecución del proyecto
 
-- Configure the top-level `parserOptions` property like this:
+```bash
+  npm i
+  npm run start 
+```
+Crear archivo **.env** que contrandra las variables globales.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+  DATABASE_URL  =  "postgresql://user:password@localhost:5432/mydatabase"
+  VITE_API_URL  =   http://localhost:80
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Asegúrate de reemplazar `user`, `password`, `localhost`, `5432`, y `mydatabase` con los valores correctos para tu configuración de base de datos.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+#### Ejecutar migraciones de Prisma
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+Ejecuta las migraciones de Prisma para configurar la base de datos:
+
+```bash
+npx prisma migrate dev --name init --schema ./backend/prisma/schema.prisma
 ```
+## Llamadas a la API
+
+#### Obtener todos los datos
+
+
+```http
+  GET /api/data
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `api_key` | `string` | **Required**. Your API key |
+
+#### Obtener los datos de un día especifico
+
+```http
+  GET /api/data/${fecha}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `fecha`      | `string` | Formato de la fecha: YYYY-MM-DDTHH:MM:SS.MSZ |
+
+```http
+  GET /api/data/${fechaInicial}/${fechaFinal}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `fechaInicial`      | `string` | Formato de la fecha: YYYY-MM-DDTHH:MM:SS.MSZ |
+| `fechaFinal`      | `string` | Formato de la fecha: YYYY-MM-DDTHH:MM:SS.MSZ |
+
