@@ -166,15 +166,15 @@ function ListaDatos() {
 
                 <table className=" md:w-full text-sm text-left rtl:text-right text-gray-800 overflow-x-scroll  border-[1px] border-gray-300 shadow-lg">
                     <thead className="text-xs text-gray-700 uppercase bg-slate-100 border-[1px] border-gray-300 ">
-                        <tr>
+                        <tr className="text-center">
                             <th scope="col" className="px-6 py-3 font-medium">Fecha</th>
                             <th scope="col" className="px-6 py-3 font-medium">Hora</th>
                             <th scope="col" className="px-6 py-3 font-medium">Temperatura</th>
                             <th scope="col" className="px-6 py-3 font-medium">Velocidad Viento</th>
                             <th scope="col" className="px-6 py-3 font-medium">Humedad</th>
-                            <th scope="col" className="px-6 py-3 font-medium">Radiación UV</th>
+                            {/* <th scope="col" className="px-6 py-3 font-medium">Radiación UV</th> */}
                             <th scope="col" className="px-6 py-3 font-medium">Presión Atmosférica</th>
-                            <th scope="col" className="px-6 py-3 font-medium">Salinidad</th>
+                            {/* <th scope="col" className="px-6 py-3 font-medium">Salinidad</th> */}
                         </tr>
                     </thead>
                     <tbody>
@@ -185,15 +185,16 @@ function ListaDatos() {
                             </tr>
                         )}
                         {currentRows.map((item, index) => (
-                            <tr key={index}>
+                            <tr className="text-center" key={index}>
                                 <td className="px-6 py-3">{item.fecha}</td>
                                 <td className="px-6 py-3">{item.hora}</td>
-                                <td className="px-6 py-3">{item.temperatura.toFixed(1)}</td>
-                                <td className="px-6 py-3">{item.velocidadViento.toFixed(1)}</td>
-                                <td className="px-6 py-3">{item.humedad.toFixed(1)}</td>
-                                <td className="px-6 py-3">{item.radiacionUV.toFixed(1)}</td>
-                                <td className="px-6 py-3">{item.presionAtmosferica.toFixed(1)}</td>
-                                <td className="px-6 py-3">{item.salinidad.toFixed(1)}</td>
+                                <td className="px-6 py-3">{item.temperatura.toFixed(1)} °C</td>
+                                <td className="px-6 py-3">{item.velocidadViento.toFixed(1)} m/s </td>
+                                <td className="px-6 py-3">{item.humedad.toFixed(1)}%</td>
+                                {/* <td className="px-6 py-3">{item.radiacionUV.toFixed(1)}</td> */}
+                                <td className="px-6 py-3">{item.presionAtmosferica.toFixed(1)} hPa
+                                </td>
+                                {/* <td className="px-6 py-3">{item.salinidad.toFixed(1)}</td> */}
                             </tr>
                         ))}
                     </tbody>

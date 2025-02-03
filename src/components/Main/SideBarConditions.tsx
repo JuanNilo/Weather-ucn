@@ -44,7 +44,7 @@ function SideBarConditions() {
             <div>
                 <p className="text-white text-2xl font-semibold">Camara Submarina</p>
                 <div className="w-full h-40 bg-gray-800 rounded-lg border-2 border-white flex justify-center items-center relative overflow-hidden">
-                    <img src="public/fondo-marino.png" alt="Proximamente" className="w-full  blur-sm hidden md:block absolute inset-0" />
+                    {/* <img src="public/fondo-marino.png" alt="Proximamente" className="w-full  blur-sm hidden md:block absolute inset-0" /> */}
                     <p className="text-white font-bold text-3xl    relative z-10">Proximamente</p>
                 </div>
             </div>
