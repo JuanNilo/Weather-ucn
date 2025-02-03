@@ -8,7 +8,8 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    port: 443,
+    host: '146.83.129.107',
+    port: 80,
     proxy: {
       '/api': {
         target: 'https://www.ceazamet.cl',

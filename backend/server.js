@@ -12,7 +12,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const app = express();
-const port = 80;
+const port = 443;
 
 // Middleware
 app.use(cors());
