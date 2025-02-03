@@ -117,10 +117,10 @@ async function handleData() {
         const combinedData = dataTemp.map(tempItem => {
             const humedadItem = dataHumedad.find(humItem => humItem.fecha === tempItem.fecha && humItem.hora === tempItem.hora);
             const vientoItem = dataViento.find(vientoItem => vientoItem.fecha === tempItem.fecha && vientoItem.hora === tempItem.hora);
-            const salinidadItem = dataSalinidad.find(salinidadItem => salinidadItem.fecha === tempItem.fecha && salinidadItem.hora === tempItem.hora);
+            const presionItem = dataPresion.find(presionItem => presionItem.fecha === tempItem.fecha && presionItem.hora === tempItem.hora);
             
             // const radiacionItem = dataRadiacionSolar.find(radiacionItem => radiacionItem.fecha === tempItem.fecha && radiacionItem.hora === tempItem.hora);
-            // const presionItem = dataPresion.find(presionItem => presionItem.fecha === tempItem.fecha && presionItem.hora === tempItem.hora);
+            // const salinidadItem = dataSalinidad.find(salinidadItem => salinidadItem.fecha === tempItem.fecha && salinidadItem.hora === tempItem.hora);
             
             return {
                 ...tempItem,
