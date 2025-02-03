@@ -10,6 +10,7 @@ export default defineConfig({
   server: {
     host: '146.83.129.107',
     port: 80,
+    allowedHosts: ['dismet.ucn.cl'],
     proxy: {
       '/api': {
         target: 'https://www.ceazamet.cl',
