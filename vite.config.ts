@@ -3,6 +3,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import fs from 'fs'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,10 +13,9 @@ export default defineConfig({
     port: 80,
     allowedHosts: ['dismet.ucn.cl'],
     https: {
+      key: fs.readFileSync('./certs/wildcard_ucn_cl.key'),
       //@ts-ignore
-      key: fs.readFileSync(process.env.KEY_PATH),
-      //@ts-ignore
-      cert: fs.readFileSync(process.env.CERT_PATH)
+      cert: fs.readFileSync('./certs/wildcard_ucn_cl.crt'),
     },
     proxy: {
       '/api': {
