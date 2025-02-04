@@ -162,44 +162,65 @@ function ListaDatos() {
                     {loading ? "Cargando..." : "Buscar"}
                 </button>
             </div>
-            <div className=" overflow-scroll">
 
-                <table className=" md:w-full text-sm text-left rtl:text-right text-gray-800 overflow-x-scroll  border-[1px] border-gray-300 shadow-lg">
-                    <thead className="text-xs text-gray-700 uppercase bg-slate-100 border-[1px] border-gray-300 ">
-                        <tr className="text-center">
-                            <th scope="col" className="px-6 py-3 font-medium">Fecha</th>
-                            <th scope="col" className="px-6 py-3 font-medium">Hora</th>
-                            <th scope="col" className="px-6 py-3 font-medium">Temperatura</th>
-                            <th scope="col" className="px-6 py-3 font-medium">Velocidad Viento</th>
-                            <th scope="col" className="px-6 py-3 font-medium">Humedad</th>
-                            {/* <th scope="col" className="px-6 py-3 font-medium">Radiación UV</th> */}
-                            <th scope="col" className="px-6 py-3 font-medium">Presión Atmosférica</th>
-                            {/* <th scope="col" className="px-6 py-3 font-medium">Salinidad</th> */}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.length === 0 && (
+            <div>
+                <div className="overflow-x-auto">
+                    <table className="min-w-full bg-white">
+                        <thead className=" bg-slate-100 border-[1px] border-slate-300">
                             <tr>
-                                <td colSpan={8} className="text-center py-3">No hay datos disponibles, intente con otra fecha.
-                                </td>
+                                <th className="px-6 py-3">Fecha</th>
+                                <th className="px-6 py-3">Hora</th>
+                                <th className="px-6 py-3">Temperatura</th>
+                                <th className="px-6 py-3">Velocidad del Viento</th>
+                                <th className="px-6 py-3">Humedad</th>
+                                <th className="px-6 py-3">Presión Atmosférica</th>
                             </tr>
-                        )}
-                        {currentRows.map((item, index) => (
-                            <tr className="text-center" key={index}>
-                                <td className="px-6 py-3">{item.fecha}</td>
-                                <td className="px-6 py-3">{item.hora}</td>
-                                <td className="px-6 py-3">{item.temperatura.toFixed(1)} °C</td>
-                                <td className="px-6 py-3">{item.velocidadViento.toFixed(1)} m/s </td>
-                                <td className="px-6 py-3">{item.humedad.toFixed(1)}%</td>
-                                {/* <td className="px-6 py-3">{item.radiacionUV.toFixed(1)}</td> */}
-                                <td className="px-6 py-3">{item.presionAtmosferica.toFixed(1)} hPa
-                                </td>
-                                {/* <td className="px-6 py-3">{item.salinidad.toFixed(1)}</td> */}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-
+                        </thead>
+                        <tbody className=" border-[1px] border-slate-300">
+                            {loading ? (
+                                Array.from({ length: rowsPerPage }).map((_, index) => (
+                                    <tr key={index} className="h-16 text-center border-b-[1px] border-slate-300">
+                                        <td className="px-6 py-3">
+                                            <div className="h-4 bg-slate-200 rounded"></div>
+                                        </td>
+                                        <td className="px-6 py-3">
+                                            <div className="h-4 bg-slate-200 rounded"></div>
+                                        </td>
+                                        <td className="px-6 py-3">
+                                            <div className="h-4 bg-slate-200 rounded"></div>
+                                        </td>
+                                        <td className="px-6 py-3">
+                                            <div className="h-4 bg-slate-200 rounded"></div>
+                                        </td>
+                                        <td className="px-6 py-3">
+                                            <div className="h-4 bg-slate-200 rounded"></div>
+                                        </td>
+                                        <td className="px-6 py-3">
+                                            <div className="h-4 bg-slate-200 rounded"></div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : data.length === 0 ? (
+                                <tr className=" h-96">
+                                    <td rowSpan={6} colSpan={6} className="text-center py-3 font-semibold">
+                                        No hay datos disponibles, intente con otra fecha.
+                                    </td>
+                                </tr>
+                            ) : (
+                                currentRows.map((item, index) => (
+                                    <tr className="text-center border-[1px] border-slate-300 h-16" key={index}>
+                                        <td className="px-6 py-3">{item.fecha}</td>
+                                        <td className="px-6 py-3">{item.hora}</td>
+                                        <td className="px-6 py-3">{item.temperatura.toFixed(1)} °C</td>
+                                        <td className="px-6 py-3">{item.velocidadViento.toFixed(1)} m/s</td>
+                                        <td className="px-6 py-3">{item.humedad.toFixed(1)}%</td>
+                                        <td className="px-6 py-3">{item.presionAtmosferica.toFixed(1)} hPa</td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div className="flex justify-center mt-4">
                 {Array.from({ length: Math.ceil(data.length / rowsPerPage) }, (_, i) => (
