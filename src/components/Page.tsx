@@ -10,7 +10,7 @@ function Page() {
     <main className=' bg-[#f1f1f1] h-[100%] md:p-5'>
 
       <div className=' block md:flex h-[100%] bg-white shadow-md md:rounded-xl'>
-        <section className=' block w-[80%]  md:p-5'>
+        <section className=' block w-[100%] md:w-[80%]  md:p-5'>
           <TopBar />
           <Historico />
           <Condiciones />
