@@ -3,7 +3,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+<<<<<<< HEAD
 //Cambiando algo
+=======
+import fs from 'fs'
+
+>>>>>>> parent of 0fef7b5 (FIX?)
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -13,9 +18,9 @@ export default defineConfig({
     allowedHosts: ['dismet.ucn.cl'],
     https: {
       //@ts-ignore
-      key: "/Users/juannilo/Downloads/UCN_2024/KEY/wildcard_ucn_cl.key",
+      key: fs.readFileSync(process.env.KEY_PATH),
       //@ts-ignore
-      cert: "/Users/juannilo/Downloads/UCN_2024/KEY/wildcard_ucn_cl.cert",
+      cert: fs.readFileSync(process.env.CERT_PATH)
     },
     proxy: {
       '/api': {
