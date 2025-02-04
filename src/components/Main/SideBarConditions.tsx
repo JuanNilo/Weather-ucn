@@ -7,7 +7,7 @@ function SideBarConditions() {
 
     const scaleBackground = (uvRadaition: number) => {
         if (uvRadaition < 3) {
-            setUvBackground('bg-green-800');
+            setUvBackground('bg-green-600');
         } else if (uvRadaition < 6) {
             setUvBackground('bg-yellow-800');
         } else if (uvRadaition < 8) {
@@ -23,6 +23,7 @@ function SideBarConditions() {
         fetch('http://api.weatherapi.com/v1/current.json?key=485dd0ceac38418db2b183840250302&q=Coquimbo&aqi=no')
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 setTemperature(data.current.temp_c);
                 setUvRadaition(data.current.uv);
             })
@@ -31,6 +32,7 @@ function SideBarConditions() {
             });
     }
     useEffect(() => {
+        console.log('fetching Temperatura y Radiacion UV');
         handleConditions();
     }, []);
 
@@ -39,10 +41,12 @@ function SideBarConditions() {
     }, [uvRadaition]);
 
     return (
-        <>
-            <p className="text-xl text-white font-bold">UCN Campus Guayacán, Coquimbo</p>
-            <div className=" flex justify-center items-center h-[40%]">
+        <main className='block'>
+            <header className=' h-24'>
 
+                <p className="text-xl text-white font-bold">UCN Campus Guayacán, Coquimbo</p>
+            </header>
+            <section className=" flex flex-col  items-center min-h-[50vh] gap-y-5 ">
                 <div className="flex flex-col justify-center items-center text-center gap-y-10">
                     {/* Radaicion UV */}
                     <div className={` ${uvBackground} w-full h-40 rounded-lg border-2 border-white flex   pt-4 flex-col justify-center`}>
@@ -52,18 +56,18 @@ function SideBarConditions() {
                     {/* temperatura */}
                     <div className="flex flex-col">
                         <p className="text-white text-2xl font-semibold">Temperatura Actual</p>
-                        <p className="text-[5rem] font-semibold text-white">{temperature} °C</p>
+                        <p className="text-[4rem] font-semibold text-white">{temperature} °C</p>
                     </div>
                 </div>
-            </div>
-            <div>
-                <p className="text-white text-2xl font-semibold">Camara Submarina</p>
-                <div className="w-full h-40 bg-gray-800 rounded-lg border-2 border-white flex justify-center items-center relative overflow-hidden">
-                    {/* <img src="public/fondo-marino.png" alt="Proximamente" className="w-full  blur-sm hidden md:block absolute inset-0" /> */}
-                    <p className="text-white font-bold text-3xl    relative z-10">Proximamente</p>
+                {/* Camara Submarina */}
+                <div className='flex flex-col justify-center items-center gap-y-4 w-[100%]'>
+                    <p className="text-white text-2xl font-semibold">Camara Submarina</p>
+                    <div className="w-full h-40 bg-gray-800 rounded-lg border-2 border-white flex justify-center items-center relative overflow-hidden">
+                        <p className="text-white font-bold text-3xl    relative z-10">Proximamente</p>
+                    </div>
                 </div>
-            </div>
-        </>
+            </section>
+        </main>
     )
 
 }
