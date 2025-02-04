@@ -93,6 +93,12 @@ function ListaDatos() {
             return;
         }
         setLoading(true);
+
+
+        // tiempo de espera 5 segundos
+        setTimeout(() => {
+            setLoading(false);
+        }, 10000);
         const formattedStartDate = new Date(startDate);
         formattedStartDate.setUTCHours(0, 0, 0, 0);
         const formattedStartDateISOString = formattedStartDate.toISOString();
@@ -118,10 +124,6 @@ function ListaDatos() {
             return dateB.getTime() - dateA.getTime();
         });
         setData(formattedData);
-        // tiempo de espera 5 segundos
-        setTimeout(() => {
-            setLoading(false);
-        }, 5000);
         setLoading(false);
         console.log("data", formattedData);
     }
