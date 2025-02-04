@@ -13,8 +13,10 @@ export default defineConfig({
     port: 80,
     allowedHosts: ['dismet.ucn.cl'],
     https: {
-      key: fs.readFileSync(process.env.KEY_PATH || 'default/path/to/key.pem'),
-      cert: fs.readFileSync(process.env.TZ || 'C:/Users/Usuario/Desktop/ucn-iot/ucn-iot.crt')
+      //@ts-ignore
+      key: fs.readFileSync(process.env.KEY_PATH),
+      //@ts-ignore
+      cert: fs.readFileSync(process.env.CERT_PATH)
     },
     proxy: {
       '/api': {
