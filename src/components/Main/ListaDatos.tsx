@@ -1,18 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { FaTimesCircle } from "react-icons/fa";
 import { handleData } from "../../utils/DataUtils";
-
-interface DataItem {
-    fecha: string;
-    hora: string;
-    temperatura: number;
-    velocidadViento: number;
-    humedad: number;
-    radiacionUV: number;
-    presionAtmosferica: number;
-    salinidad: number;
-}
+import { DataItem } from "../../types/DataItem";
+import { handleRangeData } from "../../utils/DataRange";
 
 function ListaDatos() {
     const [data, setData] = useState<DataItem[]>([]);
@@ -58,55 +48,6 @@ function ListaDatos() {
         document.body.removeChild(link);
     }
 
-    const handleRangeData = async () => {
-        setShowError(false);
-        setError("");
-        if (startDate === "" || endDate === "") {
-            setError("Debe seleccionar una fecha de inicio y una fecha de término.");
-            setShowError(true);
-            return;
-        }
-        if (startDate > endDate) {
-            setError("La fecha de inicio no puede ser mayor a la fecha de término.");
-            setShowError(true);
-            return;
-        }
-        setLoading(true);
-
-
-        // tiempo de espera 5 segundos
-        setTimeout(() => {
-            setLoading(false);
-        }, 10000);
-        const formattedStartDate = new Date(startDate);
-        formattedStartDate.setUTCHours(0, 0, 0, 0);
-        const formattedStartDateISOString = formattedStartDate.toISOString();
-        console.log('startDate', formattedStartDateISOString);
-
-        const formattedEndDate = new Date(endDate);
-        formattedEndDate.setUTCHours(0, 0, 0, 0);
-        const formattedEndDateISOString = formattedEndDate.toISOString();
-        console.log('endDate', formattedEndDateISOString);
-
-
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/data/${formattedStartDateISOString}/${formattedEndDateISOString}`);
-        const formattedData = response.data.map((item: DataItem) => {
-            const date = new Date(item.fecha);
-            const formattedDate = `${date.getUTCDate().toString().padStart(2, '0')}-${(date.getUTCMonth() + 1).toString().padStart(2, '0')}-${date.getUTCFullYear()}`;
-            return {
-                ...item,
-                fecha: formattedDate
-            };
-        }).sort((a: DataItem, b: DataItem) => {
-            const dateA = new Date(`${a.fecha.split('-').reverse().join('-')}T${a.hora}`);
-            const dateB = new Date(`${b.fecha.split('-').reverse().join('-')}T${b.hora}`);
-            return dateB.getTime() - dateA.getTime();
-        });
-        setData(formattedData);
-        setLoading(false);
-        console.log("data", formattedData);
-    }
-
     const indexOfLastRow = currentPage * rowsPerPage;
     const indexOfFirstRow = indexOfLastRow - rowsPerPage;
     const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
@@ -135,7 +76,7 @@ function ListaDatos() {
                 <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="bg-slate-100 border-[1px] border-gray-300 p-2 rounded-md" />
                 <label className="mr-2">Hasta:</label>
                 <input type="date" className="bg-slate-100 border-[1px] border-gray-300 p-2 rounded-md" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                <button onClick={handleRangeData} className="md:ml-4 md:w-32 px-4 py-2 font-semibold bg-[#23415b] text-white rounded">
+                <button onClick={() => handleRangeData(startDate, endDate, setShowError, setError, setLoading, setData)} className="md:ml-4 md:w-32 px-4 py-2 font-semibold bg-[#23415b] text-white rounded">
                     {loading ? "Cargando..." : "Buscar"}
                 </button>
             </div>
