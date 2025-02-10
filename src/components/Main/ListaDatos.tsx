@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaTimesCircle } from "react-icons/fa";
+import { handleData } from "../../utils/DataUtils";
 
 interface DataItem {
     fecha: string;
@@ -29,41 +30,19 @@ function ListaDatos() {
     // Mensaje de cargando
     const [loading, setLoading] = useState<boolean>(false);
 
-
-    // Función para obtener los datos de la API
-    const handleData = async () => {
-        const today = new Date();
-        today.setUTCHours(0, 0, 0, 0); // Ajustar la hora a 00:00:00.000Z
-        const todayISOString = today.toISOString(); // Obtener la fecha de hoy en formato YYYY-MM-DDTHH:mm:ss.sssZ
-        console.log("today", todayISOString);
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/data/${todayISOString}`);
-        const formattedData = response.data.map((item: DataItem) => {
-            const date = new Date(item.fecha);
-            const formattedDate = `${date.getUTCDate().toString().padStart(2, '0')}-${(date.getUTCMonth() + 1).toString().padStart(2, '0')}-${date.getUTCFullYear()}`;
-            return {
-                ...item,
-                fecha: formattedDate
-            };
-        }).sort((a: DataItem, b: DataItem) => {
-            const dateA = new Date(`${a.fecha.split('-').reverse().join('-')}T${a.hora}`);
-            const dateB = new Date(`${b.fecha.split('-').reverse().join('-')}T${b.hora}`);
-            return dateB.getTime() - dateA.getTime();
-        });
-        setData(formattedData);
-        console.log("data", formattedData);
-    }
+    useEffect(() => {
+        handleData(setData);
+    }, []);
 
     const downloadCSV = () => {
-        const headers = ["Fecha", "Hora", "Temperatura", "Velocidad Viento", "Humedad", "Radiación UV", "Presión Atmosférica", "Salinidad"];
+        const headers = ["Fecha", "Hora", "Temperatura", "Velocidad Viento", "Humedad", "Presión Atmosférica"];
         const rows = data.map(item => [
             item.fecha,
             item.hora,
             item.temperatura.toFixed(1),
             item.velocidadViento.toFixed(1),
             item.humedad.toFixed(1),
-            item.radiacionUV.toFixed(1),
             item.presionAtmosferica.toFixed(1),
-            item.salinidad.toFixed(1)
         ]);
 
         let csvContent = "data:text/csv;charset=utf-8,"
@@ -127,10 +106,6 @@ function ListaDatos() {
         setLoading(false);
         console.log("data", formattedData);
     }
-
-    useEffect(() => {
-        handleData();
-    }, []);
 
     const indexOfLastRow = currentPage * rowsPerPage;
     const indexOfFirstRow = indexOfLastRow - rowsPerPage;
