@@ -9,7 +9,7 @@ import axios from 'axios';
 export const handleData = async (setData: (data: any) => void) => {
     // Obtener la fecha y hora actual en UTC-3 (Chile)
     const today = new Date();
-    today.setUTCHours(today.getUTCHours() - 3, 0, 0, 0); // Ajustar la hora a 00:00:00.000Z en UTC-3 (Chile)
+    today.setUTCHours(0, 0, 0, 0); // Ajustar la hora a 00:00:00.000Z en UTC-3 (Chile)
     const todayISOString = today.toISOString(); // Obtener la fecha de hoy en formato YYYY-MM-DDTHH:mm:ss.sssZ
 
     // Realizar una solicitud GET a la API para obtener los datos del día actual

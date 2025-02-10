@@ -50,7 +50,7 @@ export const handleRangeData = async (
 
     // Formatear la fecha de término a UTC-3 (Chile)
     const formattedEndDate = new Date(endDate);
-    formattedEndDate.setUTCHours(formattedEndDate.getUTCHours() - 3, 0, 0, 0);
+    formattedEndDate.setUTCHours(0, 0, 0);
     const formattedEndDateISOString = formattedEndDate.toISOString();
 
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/data/${formattedStartDateISOString}/${formattedEndDateISOString}`);
