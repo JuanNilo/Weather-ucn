@@ -42,7 +42,6 @@ const Charts = () => {
         );
     }
     useEffect(() => {
-        console.log("data en rango de fechas", dataConditions);
         if (dataConditions.length > 0) {
             const reversedDataConditions = [...dataConditions].reverse();
             let chartData: DataItem[] = [];
@@ -50,7 +49,6 @@ const Charts = () => {
             switch (category) {
                 case 'temperatura':
                     chartData = reversedDataConditions.map((item: any) => item.temperatura);
-                    console.log("ChartTemeperature", chartData);
                     break;
                 case 'viento':
                     chartData = reversedDataConditions.map((item: any) => item.velocidadViento);
@@ -92,6 +90,9 @@ const Charts = () => {
             title: {
                 display: true,
                 text: `Gráfico de ${category}`,
+                font: {
+                    size: 20,
+                },
             },
         },
     };

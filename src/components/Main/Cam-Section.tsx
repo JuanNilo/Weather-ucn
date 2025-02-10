@@ -3,8 +3,6 @@ import videoData from "../../data/videos.json";
 
 function Historico() {
 
-    // const [bigVideo, setBigVideo] = useState(videoData[0].url)
-
     return (
         <div className="min-h-[35vh]  md:min-h-[30vh] p-2 md:p-5 rounded-lg md:mb-5   ">
             <main className="flex">

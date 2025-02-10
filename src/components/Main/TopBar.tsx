@@ -9,7 +9,6 @@ function TopBar() {
         fetch('http://api.weatherapi.com/v1/current.json?key=485dd0ceac38418db2b183840250302&q=Coquimbo&aqi=no')
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 setUvRadaition(data.current.uv);
             })
             .catch(error => {
@@ -29,8 +28,6 @@ function TopBar() {
             const dateB = new Date(`${b.fecha}T${b.hora}:00.000Z`);
             return dateA.getTime() - dateB.getTime();
         });
-
-        console.log("data sorted ✅", sortedData);
         const latestData = sortedData[sortedData.length - 2];
 
         setTemperature(latestData.temperatura.toFixed(1));
