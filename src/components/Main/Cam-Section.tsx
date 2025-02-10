@@ -1,4 +1,4 @@
-import CardVideo from "./Card-Video"
+import CardVideo from "../Cards/Card-Video"
 import videoData from "../../data/videos.json";
 
 function Historico() {
