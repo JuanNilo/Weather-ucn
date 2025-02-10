@@ -1,5 +1,5 @@
 // 
-// import Charts from "../Charts/Charts"
+import Charts from "../Charts/Charts"
 import ListaDatos from "./ListaDatos"
 function Condiciones() {
     return (
@@ -8,7 +8,7 @@ function Condiciones() {
             <div className="min-h-[50vh] p-4">
 
                 <ListaDatos />
-                {/* <Charts /> */}
+                <Charts />
             </div>
         </div>
     )
