@@ -164,4 +164,83 @@ async function handleData() {
     }
 }
 
-module.exports = { handleData };
+// ========= FUNCIÓN PARA OBTENER Y GUARDAR DATOS ENTRE DOS FECHAS =========
+async function handleDataByRange(startDate, endDate) {
+    try {
+        const baseUrl = "https://www.ceazamet.cl/ws/pop_ws.php";
+        const user = "mlotito@ucn.cl";
+
+        // Sensores disponibles
+        const sensores = {
+            temperatura: "UCNGTA",
+            humedad: "UCNGHR",
+            viento: "UCNGVV",
+            presion: "UCNGPA"
+            // radiacion: "UCNGRS",
+            // salinidad: "UCNGSM"
+        };
+
+        const fetchSensor = async (sensorCode) => {
+            const url = `${baseUrl}?fn=GetSerieSensor&p_cod=ceazamet&s_cod=${sensorCode}&fecha_inicio=${startDate}&fecha_fin=${endDate}&user=${user}`;
+            const res = await axios.get(url);
+            return res.data.split('\n').filter(l => l.startsWith(sensorCode) && l.split(',')[2] !== '');
+        };
+
+        // Obtener y procesar los datos de todos los sensores
+        const procesar = (lines, key) =>
+            lines.map(line => {
+                const [, lectura, , prom] = line.split(',');
+                const [fecha, horaCompleta] = lectura.split(' ');
+                const [hora, minutos] = horaCompleta.split(':');
+                return { fecha, hora: `${hora}:${minutos}`, [key]: parseFloat(prom) };
+            });
+
+        const linesTemp = await fetchSensor(sensores.temperatura);
+        const linesHum = await fetchSensor(sensores.humedad);
+        const linesViento = await fetchSensor(sensores.viento);
+        const linesPresion = await fetchSensor(sensores.presion);
+
+        const dataTemp = procesar(linesTemp, 'temperatura');
+        const dataHum = procesar(linesHum, 'humedad');
+        const dataViento = procesar(linesViento, 'viento');
+        const dataPresion = procesar(linesPresion, 'presion');
+
+        // Combinar datos por fecha y hora
+        const combined = dataTemp.map(item => {
+            const hum = dataHum.find(d => d.fecha === item.fecha && d.hora === item.hora);
+            const viento = dataViento.find(d => d.fecha === item.fecha && d.hora === item.hora);
+            const presion = dataPresion.find(d => d.fecha === item.fecha && d.hora === item.hora);
+
+            return {
+                ...item,
+                humedad: hum?.humedad ?? NaN,
+                viento: viento?.viento ?? NaN,
+                presion: presion?.presion ?? NaN
+            };
+        }).filter(d => !isNaN(d.temperatura) && !isNaN(d.humedad) && !isNaN(d.viento) && !isNaN(d.presion));
+
+        // Insertar en base de datos
+        const result = await prisma.datosMeteorologicos.createMany({
+            data: combined.map(d => ({
+                fecha: new Date(d.fecha),
+                hora: d.hora,
+                temperatura: d.temperatura,
+                humedad: d.humedad,
+                velocidadViento: d.viento,
+                presionAtmosferica: d.presion,
+                radiacionUV: 0,
+                salinidad: 0
+            })),
+            skipDuplicates: true
+        });
+
+        console.log(`✅ Datos insertados: ${result.count}`);
+        return result;
+
+    } catch (error) {
+        console.error("❌ Error al procesar datos por rango:", error.message);
+        throw error;
+    }
+}
+
+module.exports = { handleData, handleDataByRange };
